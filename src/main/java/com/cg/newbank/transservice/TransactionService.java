@@ -1,11 +1,15 @@
 package com.cg.newbank.transservice;
 
+import com.cg.newbank.transaction.Transaction;
+
 public interface TransactionService {
 
-	void deposit(long transAcc, long amt,long bal);
+	long deposit(long transAcc, long amt,long bal);
 
-	void withdrawl(long acc, long amt, long bal);
+	long withdrawl(long acc, long amt, long bal);
 
-	void dispBal(long acc, long amt, long bal);
+	long dispBal(long acc, long amt, long bal);
+
+	Transaction fundTransfer(Transaction transaction);
 
 }

@@ -6,18 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.cg.newbank.App;
 import com.cg.newbank.customer.Customer;
 
 public class CustDAOImpl implements CustDAO {
-	Customer customer =new Customer();
+	Customer customer = new Customer();
 
 	public Customer register(Customer customer) {
+		int c=0;
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","Bindu","oracle123");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "Bindu", "oracle123");
 
-		PreparedStatement ps = con.prepareStatement("insert into customer_details(first_name,last_name,email_id,password,pancard_no,aadhaar_no,address,mobile,balance) values(?,?,?,?,?,?,?,?,?)");
+			PreparedStatement ps = con.prepareStatement(
+					"insert into customer_details(first_name,last_name,email_id,password,pancard_no,aadhaar_no,address,mobile,balance) values(?,?,?,?,?,?,?,?,?)");
 
 			ps.setString(1, customer.getFirstName());
 			ps.setString(2, customer.getLastName());
@@ -30,24 +31,18 @@ public class CustDAOImpl implements CustDAO {
 			ps.setLong(9, customer.getBalance());
 			int i = ps.executeUpdate();
 			if (i == 1) {
-				System.out.println("done");
-				
-				PreparedStatement ps2 =con.prepareStatement("select account_no,balance from customer_details where aadhaar_no=?");
+				PreparedStatement ps2 = con
+						.prepareStatement("select account_no,balance from customer_details where aadhaar_no=?");
 				ps2.setString(1, customer.getAadhaarNo());
-				ResultSet rs=ps2.executeQuery();
-				while(rs.next()) {
+				ResultSet rs = ps2.executeQuery();
+				while (rs.next()) {
 					customer.setAccountNo(rs.getLong(1));
 					customer.setBalance(rs.getLong(2));
+					c++;
 				}
-				System.out.println("bal is " +customer.getBalance());
-				System.out.println("acc no is "+customer.getAccountNo());
-				
-			} else {
-				System.out.println("could not insert data");
-			}
-			
 
-			
+			}
+
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,64 +50,50 @@ public class CustDAOImpl implements CustDAO {
 			// TODO Ato-generated catch block
 			e.printStackTrace();
 		}
-		
+		if(c==1)
 		return customer;
+		else
+			return null;
 	}
 
-	public Customer login(long acc,String pswd) {
-		int c=0;
+	public Customer login(long acc, String pswd) {
+		int c = 0;
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","Bindu","oracle123");
-			PreparedStatement ps =con.prepareStatement("select * from customer_details where account_no=?");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "Bindu", "oracle123");
+			PreparedStatement ps = con.prepareStatement("select * from customer_details where account_no=?");
 			ps.setLong(1, acc);
-			ResultSet rs=ps.executeQuery();
-			while(rs.next()) {
-				if(acc==rs.getLong(1)) {
-					if(pswd.equals(rs.getString(5)) ){
-					customer.setAccountNo(rs.getLong(1));
-					customer.setFirstName(rs.getString(2));
-					customer.setLastName(rs.getString(3));
-					customer.setEmailId(rs.getString(4));
-					customer.setPassword(rs.getString(5));
-					customer.setPancardNo(rs.getString(6));
-					customer.setAadhaarNo(rs.getString(7));
-					customer.setAddress(rs.getString(8));
-					customer.setMobileNo(rs.getString(9));
-					customer.setBalance(rs.getLong(10));
-					
-					System.out.println("welcome "+ customer.getFirstName() );
-					System.out.println("balance is "+ customer.getBalance());
-				//	App a= new App();
-		         //	a.disp(rs.getLong(1),rs.getLong(10));
-					c++;
-			}
-					else {
-						System.out.println("incorrect pswd");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				if (acc == rs.getLong(1)) {
+					if (pswd.equals(rs.getString(5))) {
+						customer.setAccountNo(rs.getLong(1));
+						customer.setFirstName(rs.getString(2));
+						customer.setLastName(rs.getString(3));
+						customer.setEmailId(rs.getString(4));
+						customer.setPassword(rs.getString(5));
+						customer.setPancardNo(rs.getString(6));
+						customer.setAadhaarNo(rs.getString(7));
+						customer.setAddress(rs.getString(8));
+						customer.setMobileNo(rs.getString(9));
+						customer.setBalance(rs.getLong(10));
+
+						c++;
 					}
 				}
-			
-		else {
-			System.out.println("user doesn't exists");
-			
-		}
-		
-
-		
 			}
-	} catch (ClassNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (SQLException e) {
-		// TODO Ato-generated catch block
-		e.printStackTrace();
-	}
-		if(c!=0)
-		return customer;
-		else return null;
-	
-		
-	}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Ato-generated catch block
+			e.printStackTrace();
+		}
+		if (c != 0)
+			return customer;
+		else
+			return null;
 
+	}
 
 }
