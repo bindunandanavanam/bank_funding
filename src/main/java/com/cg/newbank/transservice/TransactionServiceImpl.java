@@ -12,4 +12,14 @@ public class TransactionServiceImpl implements TransactionService{
 		
 	}
 
+	public void withdrawl(long transAcc, long amt, long bal) {
+		transactionDAO.withdrawl(transAcc, amt,bal);
+		
+	}
+
+	public void dispBal(long acc, long amt, long bal) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

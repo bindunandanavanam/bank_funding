@@ -2,6 +2,7 @@ package com.cg.newbank;
 
 import java.util.Scanner;
 
+
 import com.cg.newbank.customer.Customer;
 import com.cg.newbank.customer.Transaction;
 import com.cg.newbank.custservice.CustService;
@@ -16,39 +17,43 @@ public class App
 		TransactionService transactionService=new TransactionServiceImpl();
 		long acc=account;
 		long bal=balance;
+		long amt=0;
 		System.out.println("enter 1. deposit 2. withdrwal 3. show balance");
 		int i=sc.nextInt();
 		switch(i){
 		case 1:
+			System.out.println("enter amount to deposit");
+			amt=sc.nextLong();
 			transactionService.deposit(acc, amt, bal);
 			break;
 		case 2:
-			transactionService.deposit(acc, amt, bal);
+			System.out.println("enter amount to debit");
+			amt=sc.nextLong();
+			transactionService.withdrawl(acc, amt, bal);
 			break;
 		case 3:
-		
-			transactionService.deposit(acc, amt, bal);
+			System.out.println("bal is "+bal);
+			transactionService.dispBal(acc, amt, bal);
 			break;
 		}
 	}
 	static long transAcc,bal;
-	static Customer customer =new Customer();
+	
 	static Transaction transaction =new Transaction();
 	static CustService custservice =new CustServiceImpl();
 	static TransactionService transactionservice =new TransactionServiceImpl();
 	
     public static void main( String[] args )
     {
-    	
+    	App app=new App();
+    	 Customer customer =new Customer();
+    	 Customer customer1 =new Customer();
         Scanner sc=new Scanner(System.in);
-        System.out.println("enter the choice 1. Login/Registration 2. Transaction");
-        int ch=sc.nextInt();
-        switch(ch)
-        {
-        case 1:
         	System.out.println("enter 1. Register 2. Login");
         	int c=sc.nextInt();
-        	if(c==1) {
+        	switch(c) {
+        	case 1:
+        		
         		System.out.println("enter first_name");
         		customer.setFirstName(sc.next());
         		System.out.println("enter last_name");
@@ -67,28 +72,21 @@ public class App
         		customer.setMobileNo(sc.next());
         		customer.setBalance(0);
         		
-        		custservice.register(customer);
+        	customer=	custservice.register(customer);
         		
-        	}
-        	else if(c==2) {
+        	break;
+        	case 2:
         		System.out.println("enter account no");
         		long acc=sc.nextLong();
         		System.out.println("enter password");
         		String pswd=sc.next();
-        		customer=	custservice.login(acc,pswd);
-        		 transAcc=customer.getAccountNo();
+        		customer1=	custservice.login(acc,pswd);
+        		 transAcc=customer1.getAccountNo();
         		 System.out.println(transAcc);
-        		 bal=customer.getBalance();
-        		 customer.setAccountNo(transAcc);
-        		 
-  
-        	}
+        		 bal=customer1.getBalance();
+        	if(customer1!=null)
+        	app.disp(customer1.getAccountNo(), customer1.getBalance());
         	break;
-        case 2:
-        	System.out.println("Transaction");
-        	System.out.println("Enter 1. Deposit 2. Withdrawl 3. Show Balance 4. Fund Transfer ");
-        	int c2=sc.nextInt();
-        	System.out.println(customer.getAccountNo());
         	
         }
         	

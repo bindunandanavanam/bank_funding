@@ -83,8 +83,8 @@ public class CustDAOImpl implements CustDAO {
 					
 					System.out.println("welcome "+ customer.getFirstName() );
 					System.out.println("balance is "+ customer.getBalance());
-					App a= new App();
-		         	a.disp(rs.getLong(1),rs.getLong(10));
+				//	App a= new App();
+		         //	a.disp(rs.getLong(1),rs.getLong(10));
 					c++;
 			}
 					else {
